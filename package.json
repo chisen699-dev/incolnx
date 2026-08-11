@@ -1,0 +1,20 @@
+{
+  "name": "lincolnx-platform",
+  "version": "2.0.0",
+  "description": "LincolnX Game Installer Platform - Netlify + Supabase",
+  "scripts": {
+    "build": "node scripts/copy-admin.js",
+    "build:full": "npm run install-functions && node scripts/copy-admin.js",
+    "dev": "netlify dev",
+    "install-functions": "cd functions && npm install",
+    "install-all": "npm install && npm run install-functions"
+  },
+  "keywords": [
+    "game-installer",
+    "license-key",
+    "netlify",
+    "supabase"
+  ],
+  "author": "LincolnX",
+  "license": "PROPRIETARY"
+}

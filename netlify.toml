@@ -1,0 +1,58 @@
+# =============================================
+# LINCOLNX NETLIFY CONFIGURATION
+# =============================================
+# IMPORTANT: In Netlify build settings:
+#   - Base directory: [LEAVE EMPTY] (root)
+#   - Build command:  node scripts/copy-admin.js
+#   - Publish directory: client
+# =============================================
+
+[build]
+  # Netlify will publish the client folder
+  publish = "client"
+  # Netlify functions location (root level)
+  functions = "functions"
+  # Build command copies admin panel into client/admin/
+  command = "node scripts/copy-admin.js"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# =============================================
+# REDIRECTS
+# =============================================
+
+# Admin panel direct access
+[[redirects]]
+  from = "/admin"
+  to = "/admin/admin.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/admin.html"
+  status = 200
+
+# SPA fallback - all other routes go to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# =============================================
+# SECURITY HEADERS
+# =============================================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "no-cache"
+
+# Don't cache API function responses
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"

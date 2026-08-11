@@ -1,0 +1,8 @@
+{
+  "name": "lincolnx-functions",
+  "version": "1.0.0",
+  "description": "Netlify serverless functions for LincolnX platform",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LincolnX | Game Installer</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ===== NEXT-GEN INSTALLER STYLES ===== */
+  :root {
+    --neon-blue: #00d4ff;
+    --neon-purple: #9b5cff;
+    --neon-green: #00ff9d;
+    --neon-red: #ff4d6d;
+    --bg-dark: #0a0a12;
+    --bg-card: #12121f;
+    --text: #e8e8f0;
+    --text-dim: #8a8aa0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.08), transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(155, 92, 255, 0.08), transparent 50%);
+  }
+
+  /* ===== TOP NAV ===== */
+  .top-nav {
+    background: rgba(18, 18, 31, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .top-nav .brand {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .top-nav .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: rgba(0,255,157,0.1);
+    border: 1px solid rgba(0,255,157,0.3);
+    color: var(--neon-green);
+  }
+
+  .top-nav .status-badge.invalid {
+    background: rgba(255,77,109,0.1);
+    border-color: rgba(255,77,109,0.3);
+    color: var(--neon-red);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  .dot.invalid-dot {
+    background: var(--neon-red);
+    box-shadow: 0 0 10px var(--neon-red);
+    animation: none;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .main-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  .welcome-hero {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .welcome-hero .icon { font-size: 60px; }
+
+  .welcome-hero h1 {
+    font-size: 40px;
+    margin-top: 12px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .welcome-hero p {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  /* ===== GAMES GRID ===== */
+  .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .section-title h2 {
+    font-size: 24px;
+    color: var(--text);
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .pill:hover { border-color: var(--neon-blue); color: var(--text); }
+
+  .pill.active {
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(155,92,255,0.15));
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0,212,255,0.2);
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .game-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .game-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0,212,255,0.4);
+    box-shadow: 0 15px 40px rgba(0,212,255,0.15);
+  }
+
+  .game-card .game-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    background: #1a1a2e;
+  }
+
+  .game-card .game-info {
+    padding: 16px;
+  }
+
+  .game-card .game-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .game-card .new-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--neon-green), #00d4ff);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .game-card .game-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .game-card .game-category {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px;
+    color: var(--neon-blue);
+  }
+
+  .game-card .download-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .game-card .download-btn:hover {
+    box-shadow: 0 8px 25px rgba(0,212,255,0.3);
+    transform: translateY(-1px);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-size: 16px;
+  }
+
+  /* ===== LOGOUT ===== */
+  .logout-btn {
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: rgba(255,77,109,0.1);
+    border: 1px solid rgba(255,77,109,0.3);
+    color: var(--neon-red);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .logout-btn:hover {
+    background: rgba(255,77,109,0.2);
+  }
+
+  @media (max-width: 600px) {
+    .top-nav { flex-direction: column; gap: 12px; }
+    .welcome-hero h1 { font-size: 28px; }
+    .games-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="brand">🎮 LINCOLN<span>X</span></div>
+  <div>
+    <span id="statusBadge" class="status-badge">
+      <span class="dot"></span>
+      <span id="statusText">Validating...</span>
+    </span>
+  </div>
+  <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+</nav>
+
+<!-- MAIN -->
+<div class="main-container">
+  <div class="welcome-hero">
+    <div class="icon">📥</div>
+    <h1>Game Installer</h1>
+    <p>Browse and download pre-installed games</p>
+  </div>
+
+  <!-- Games Section -->
+  <div class="section-title">
+    <h2>🎮 Available Games</h2>
+    <div class="filter-pills" id="filterPills">
+      <button class="pill active" onclick="filterGames('all')">All</button>
+      <button class="pill" onclick="filterGames('pc')">PC</button>
+      <button class="pill" onclick="filterGames('lowpc')">Low PC</button>
+      <button class="pill" onclick="filterGames('ps2')">PS2</button>
+      <button class="pill" onclick="filterGames('ps3')">PS3</button>
+      <button class="pill" onclick="filterGames('switch')">Switch</button>
+    </div>
+  </div>
+
+  <div id="gamesGrid" class="games-grid">
+    <div class="empty-state">Loading games...</div>
+  </div>
+</div>
+
+<script>
+  let allGames = [];
+  let currentFilter = 'all';
+
+  const auth = JSON.parse(localStorage.getItem('lincolnx_auth') || 'null');
+
+  // ===== AUTH CHECK =====
+  function checkAuth() {
+    const statusBadge = document.getElementById('statusBadge');
+    const statusText = document.getElementById('statusText');
+
+    if (auth && auth.authenticated) {
+      statusText.textContent = 'Access Granted';
+      return true;
+    } else {
+      statusBadge.classList.add('invalid');
+      statusBadge.querySelector('.dot').classList.add('invalid-dot');
+      statusText.textContent = 'Access Denied';
+      // Redirect to login
+      setTimeout(() => window.location.href = 'login.html', 1500);
+      return false;
+    }
+  }
+
+  // ===== LOGOUT =====
+  function logout() {
+    localStorage.removeItem('lincolnx_auth');
+    window.location.href = 'login.html';
+  }
+
+  // ===== LOAD GAMES =====
+  async function loadGames() {
+    try {
+      const response = await fetch('/.netlify/functions/getGames');
+      const result = await response.json();
+
+      if (result.success) {
+        allGames = result.data;
+        renderGames();
+      } else {
+        document.getElementById('gamesGrid').innerHTML = '<div class="empty-state">Failed to load games: ' + result.message + '</div>';
+      }
+    } catch (error) {
+      console.error('Error loading games:', error);
+      document.getElementById('gamesGrid').innerHTML = '<div class="empty-state">Network error loading games.</div>';
+    }
+  }
+
+  // ===== FILTER GAMES =====
+  function filterGames(category) {
+    currentFilter = category;
+
+    // Update pill active state
+    document.querySelectorAll('.pill').forEach(pill => {
+      pill.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    renderGames();
+  }
+
+  // ===== RENDER GAMES =====
+  function renderGames() {
+    const grid = document.getElementById('gamesGrid');
+
+    let filtered = allGames;
+    if (currentFilter !== 'all') {
+      filtered = allGames.filter(game => game.category === currentFilter);
+    }
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty-state">No games available in this category yet.</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(game => `
+      <div class="game-card">
+        <img class="game-img" src="${game.image_url || 'https://via.placeholder.com/300x160?text=No+Image'}" alt="${game.name}" onerror="this.src='https://via.placeholder.com/300x160?text=No+Image'">
+        <div class="game-info">
+          <div class="game-name">
+            ${game.name}${game.is_new ? '<span class="new-badge">NEW</span>' : ''}
+          </div>
+          <div class="game-meta">
+            <span class="game-category">${game.category.toUpperCase()}</span>
+            <span>${game.size} GB</span>
+          </div>
+          <button class="download-btn" onclick="window.open('${game.download_url}', '_blank')">⬇ DOWNLOAD</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ===== INIT =====
+  if (checkAuth()) {
+    loadGames();
+  }
+</script>
+</body>
+</html>

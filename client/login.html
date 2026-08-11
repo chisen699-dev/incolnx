@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LincolnX | Secure Login</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ===== NEXT-GEN LOGIN STYLES ===== */
+  :root {
+    --neon-blue: #00d4ff;
+    --neon-purple: #9b5cff;
+    --neon-green: #00ff9d;
+    --bg-dark: #0a0a12;
+    --bg-card: #12121f;
+    --text: #e8e8f0;
+    --text-dim: #8a8aa0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.12), transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(155, 92, 255, 0.12), transparent 50%),
+      radial-gradient(circle at 50% 90%, rgba(0, 255, 157, 0.08), transparent 50%);
+    overflow: hidden;
+  }
+
+  .login-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+  }
+
+  .login-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: fadeUp 0.6s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(0,212,255,0.08) 10%, transparent 20%, transparent 50%, rgba(155,92,255,0.08) 60%, transparent 70%);
+    animation: rotateGlow 8s linear infinite;
+    pointer-events: none;
+  }
+
+  .login-card > * { position: relative; z-index: 1; }
+
+  @keyframes rotateGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .logo .icon { font-size: 48px; }
+
+  .logo h1 {
+    font-size: 32px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .logo p {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  .login-title {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .login-title h2 {
+    font-size: 20px;
+    color: var(--text);
+  }
+
+  .login-title p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  .input-group {
+    margin-bottom: 20px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 15px 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 16px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+  }
+
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    background: rgba(0, 212, 255, 0.03);
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+  }
+
+  .login-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .status-msg {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    display: none;
+  }
+
+  .status-msg.success { background: rgba(0,255,157,0.1); color: var(--neon-green); display: block; }
+  .status-msg.error { background: rgba(255,77,77,0.1); color: #ff4d4d; display: block; }
+  .status-msg.loading { background: rgba(0,212,255,0.1); color: var(--neon-blue); display: block; }
+
+  .footer-links {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .footer-links a {
+    color: var(--neon-blue);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="logo">
+      <div class="icon">🎮</div>
+      <h1>LINCOLN<span style="background:linear-gradient(135deg,#00ff9d,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">X</span></h1>
+      <p>Game Installer Platform</p>
+    </div>
+
+    <div class="login-title">
+      <h2>🔐 Secure Login</h2>
+      <p>Enter your license key to access the game library</p>
+    </div>
+
+    <div class="input-group">
+      <label for="licenseKeyInput">License Key</label>
+      <input type="text" id="licenseKeyInput" placeholder="LX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+    </div>
+
+    <button id="loginBtn" class="login-btn">🔓 LOGIN</button>
+
+    <div id="statusMsg" class="status-msg"></div>
+
+    <div class="footer-links">
+      <a href="index.html">← Back to Home</a> &nbsp;|&nbsp; <a href="admin/admin.html">Admin</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const loginBtn = document.getElementById('loginBtn');
+  const keyInput = document.getElementById('licenseKeyInput');
+  const statusMsg = document.getElementById('statusMsg');
+
+  function showStatus(message, type) {
+    statusMsg.className = 'status-msg ' + type;
+    statusMsg.textContent = message;
+  }
+
+  loginBtn.addEventListener('click', async () => {
+    const key = keyInput.value.trim();
+    if (!key) {
+      showStatus('Please enter your license key', 'error');
+      return;
+    }
+
+    loginBtn.disabled = true;
+    showStatus('Validating license key...', 'loading');
+
+    try {
+      // Call Netlify validateKey function
+      const response = await fetch('/.netlify/functions/validateKey', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showStatus('Access granted!', 'success');
+        // Store auth in session
+        localStorage.setItem('lincolnx_auth', JSON.stringify({ key, authenticated: true }));
+        // Redirect to installer page
+        setTimeout(() => {
+          window.location.href = 'installer.html';
+        }, 800);
+      } else {
+        showStatus(result.message || 'Invalid or inactive license key', 'error');
+        loginBtn.disabled = false;
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      showStatus('Network error. Please try again.', 'error');
+      loginBtn.disabled = false;
+    }
+  });
+
+  // Enter key submits
+  keyInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      loginBtn.click();
+    }
+  });
+</script>
+</body>
+</html>

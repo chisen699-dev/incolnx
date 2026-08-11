@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LincolnX | Admin Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ===== NEXT-GEN ADMIN DASHBOARD ===== */
+  :root {
+    --neon-blue: #00d4ff;
+    --neon-purple: #9b5cff;
+    --neon-green: #00ff9d;
+    --neon-red: #ff4d6d;
+    --neon-yellow: #ffc107;
+    --bg-dark: #0a0a12;
+    --bg-card: #12121f;
+    --bg-input: rgba(255,255,255,0.04);
+    --text: #e8e8f0;
+    --text-dim: #8a8aa0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.06), transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(155, 92, 255, 0.06), transparent 50%);
+  }
+
+  /* ===== TOP NAV ===== */
+  .top-nav {
+    background: rgba(18, 18, 31, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .top-nav .brand {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .top-nav .nav-links {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .top-nav .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
+
+  .top-nav .nav-links a:hover { color: var(--neon-blue); }
+
+  /* ===== MAIN ===== */
+  .dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 24px;
+  }
+
+  /* ===== METRICS CARDS ===== */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .metric-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0,212,255,0.3);
+    box-shadow: 0 10px 30px rgba(0,212,255,0.1);
+  }
+
+  .metric-card .metric-icon { font-size: 28px; margin-bottom: 12px; }
+
+  .metric-card .metric-value {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .metric-card .metric-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 30px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .section-header h2 {
+    font-size: 22px;
+    color: var(--text);
+  }
+
+  .section-header h2 .icon { margin-right: 8px; }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #fff;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+  }
+
+  .btn-primary:hover { box-shadow: 0 8px 25px rgba(0,212,255,0.3); transform: translateY(-1px); }
+
+  .btn-success {
+    background: linear-gradient(135deg, #00c853, var(--neon-green));
+  }
+
+  .btn-success:hover { box-shadow: 0 8px 25px rgba(0,255,157,0.3); transform: translateY(-1px); }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #ff4d6d, #ff1744);
+  }
+
+  .btn-danger:hover { box-shadow: 0 8px 25px rgba(255,77,109,0.3); transform: translateY(-1px); }
+
+  .btn-warning {
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    color: #000;
+  }
+
+  .btn-warning:hover { box-shadow: 0 8px 25px rgba(255,193,7,0.3); transform: translateY(-1px); }
+
+  .btn-sm { padding: 8px 14px; font-size: 12px; border-radius: 8px; }
+
+  /* ===== FILTER PILLS ===== */
+  .filter-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .pill:hover { border-color: var(--neon-blue); color: var(--text); }
+
+  .pill.active {
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(155,92,255,0.15));
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0,212,255,0.2);
+  }
+
+  /* ===== GAMES LIST ===== */
+  .games-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .game-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s;
+  }
+
+  .game-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    background: rgba(0,212,255,0.03);
+  }
+
+  .game-card .game-info { flex: 1; }
+
+  .game-card .game-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .game-card .game-name .new-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--neon-green), #00d4ff);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 6px;
+  }
+
+  .game-card .game-meta {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .game-card .game-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* ===== LICENSE KEYS LIST ===== */
+  .keys-toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .keys-toolbar input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    background: var(--bg-input);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+  }
+
+  .keys-toolbar input:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0,212,255,0.15);
+  }
+
+  .keys-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .key-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px;
+    transition: all 0.3s;
+  }
+
+  .key-card:hover {
+    border-color: rgba(155,92,255,0.3);
+  }
+
+  .key-card .key-value {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--neon-blue);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+
+  .key-card .key-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-badge.active { background: rgba(0,255,157,0.15); color: var(--neon-green); border: 1px solid rgba(0,255,157,0.3); }
+  .status-badge.used { background: rgba(0,212,255,0.15); color: var(--neon-blue); border: 1px solid rgba(0,212,255,0.3); }
+  .status-badge.revoked { background: rgba(255,77,109,0.15); color: var(--neon-red); border: 1px solid rgba(255,77,109,0.3); }
+
+  .key-card .key-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .modal-header h2 { font-size: 20px; }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .modal-close:hover { color: var(--neon-red); }
+
+  .modal-section { margin-bottom: 20px; }
+
+  .modal-section label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .modal-section input,
+  .modal-section select {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-input);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+
+  .modal-section input:focus,
+  .modal-section select:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0,212,255,0.15);
+  }
+
+  .modal-section .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text);
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+  }
+
+  .modal-section .checkbox-label input {
+    width: auto;
+  }
+
+  .modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  /* ===== ALERT ===== */
+  .alert {
+    display: none;
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .alert.success { display: block; background: rgba(0,255,157,0.1); color: var(--neon-green); border: 1px solid rgba(0,255,157,0.3); }
+  .alert.error { display: block; background: rgba(255,77,109,0.1); color: var(--neon-red); border: 1px solid rgba(255,77,109,0.3); }
+  .alert.info { display: block; background: rgba(0,212,255,0.1); color: var(--neon-blue); border: 1px solid rgba(0,212,255,0.3); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+    font-size: 15px;
+  }
+
+  @media (max-width: 700px) {
+    .top-nav { flex-direction: column; gap: 12px; }
+    .games-list, .keys-list { grid-template-columns: 1fr; }
+    .game-card { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="brand">🎮 LINCOLN<span>X</span> ADMIN</div>
+  <div class="nav-links">
+    <a href="../index.html">← Home</a>
+    <a href="#" onclick="logout()">🚪 Logout</a>
+  </div>
+</nav>
+
+<!-- MAIN DASHBOARD -->
+<div class="dashboard">
+  <!-- Alert -->
+  <div id="alert" class="alert"></div>
+
+  <!-- Metrics -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon">🎮</div>
+      <div class="metric-value" id="metricTotalGames">0</div>
+      <div class="metric-label">Total Games</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">✅</div>
+      <div class="metric-value" id="metricActiveKeys">0</div>
+      <div class="metric-label">Active Keys</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">🔄</div>
+      <div class="metric-value" id="metricUsedKeys">0</div>
+      <div class="metric-label">Used Keys</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">🚫</div>
+      <div class="metric-value" id="metricRevokedKeys">0</div>
+      <div class="metric-label">Revoked Keys</div>
+    </div>
+  </div>
+
+  <!-- ===== GAMES MANAGEMENT ===== -->
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon">🎮</span>Games Management</h2>
+      <button class="btn btn-primary" onclick="openGameModal()">➕ Add Game</button>
+    </div>
+
+    <div class="filter-pills" style="margin-bottom: 20px;">
+      <button class="pill active" onclick="filterGames('all')">All</button>
+      <button class="pill" onclick="filterGames('pc')">PC</button>
+      <button class="pill" onclick="filterGames('lowpc')">Low PC</button>
+      <button class="pill" onclick="filterGames('ps2')">PS2</button>
+      <button class="pill" onclick="filterGames('ps3')">PS3</button>
+      <button class="pill" onclick="filterGames('switch')">Switch</button>
+    </div>
+
+    <div id="gamesList" class="games-list">
+      <div class="empty-state">Loading games...</div>
+    </div>
+  </div>
+
+  <!-- ===== LICENSE KEYS MANAGEMENT ===== -->
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon">🔑</span>License Keys</h2>
+    </div>
+
+    <div class="keys-toolbar">
+      <input type="text" id="newKeyInput" placeholder="Enter license key (e.g., LX-XXXX-XXXX-XXXX)">
+      <button class="btn btn-success" onclick="addKey()">➕ Add Key</button>
+      <button class="btn btn-primary" onclick="generateRandomKey()">⚡ Generate Key</button>
+    </div>
+
+    <div id="keysList" class="keys-list">
+      <div class="empty-state">Loading license keys...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD/EDIT GAME MODAL ===== -->
+<div id="gameModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="gameModalTitle">➕ Add Game</h2>
+      <button class="modal-close" onclick="closeGameModal()">&times;</button>
+    </div>
+
+    <div class="modal-section">
+      <label>Game Name *</label>
+      <input type="text" id="gameName" placeholder="Enter game name">
+    </div>
+    <div class="modal-section">
+      <label>Category *</label>
+      <select id="gameCategory">
+        <option value="pc">PC Games</option>
+        <option value="lowpc">Low-End PC</option>
+        <option value="ps2">PS2 Emulator</option>
+        <option value="ps3">PS3 Emulator</option>
+        <option value="switch">Switch Emulator</option>
+      </select>
+    </div>
+    <div class="modal-section">
+      <label>Size (GB) *</label>
+      <input type="number" id="gameSize" step="0.01" placeholder="e.g., 45.5">
+    </div>
+    <div class="modal-section">
+      <label>Download URL *</label>
+      <input type="url" id="gameDownloadUrl" placeholder="https://...">
+    </div>
+    <div class="modal-section">
+      <label>Image URL</label>
+      <input type="url" id="gameImageUrl" placeholder="https://...">
+    </div>
+    <div class="modal-section">
+      <label class="checkbox-label">
+        <input type="checkbox" id="gameIsNew">
+        Mark as NEW
+      </label>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-warning" onclick="closeGameModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:var(--text-dim);">Cancel</button>
+      <button class="btn btn-success" onclick="saveGame()">💾 Save Game</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===============================
+  // LINCOLNX ADMIN DASHBOARD
+  // ===============================
+  let games = [];
+  let licenseKeys = [];
+  let currentFilter = 'all';
+  let editingGameId = null;
+
+  const API = '/.netlify/functions';
+
+  // ===== ALERT =====
+  function showAlert(message, type) {
+    const alert = document.getElementById('alert');
+    alert.className = 'alert ' + type;
+    alert.textContent = message;
+    setTimeout(() => { alert.style.display = 'none'; }, 3000);
+  }
+
+  // ===== LOGOUT =====
+  function logout() {
+    localStorage.removeItem('lincolnx_auth');
+    window.location.href = '../index.html';
+  }
+
+  // ===== LOAD DATA =====
+  async function loadAll() {
+    await Promise.all([loadGames(), loadKeys()]);
+  }
+
+  async function loadGames() {
+    try {
+      const response = await fetch(`${API}/getGames`);
+      const result = await response.json();
+      if (result.success) {
+        games = result.data;
+        renderGames();
+        updateMetrics();
+      } else {
+        showAlert('Failed to load games: ' + result.message, 'error');
+      }
+    } catch (error) {
+      console.error('Error loading games:', error);
+      showAlert('Network error loading games', 'error');
+    }
+  }
+
+  async function loadKeys() {
+    try {
+      const response = await fetch(`${API}/licenseKeys`);
+      const result = await response.json();
+      if (result.success) {
+        licenseKeys = result.data;
+        renderKeys();
+        updateMetrics();
+      } else {
+        showAlert('Failed to load license keys: ' + result.message, 'error');
+      }
+    } catch (error) {
+      console.error('Error loading keys:', error);
+      showAlert('Network error loading license keys', 'error');
+    }
+  }
+
+  // ===== METRICS =====
+  function updateMetrics() {
+    document.getElementById('metricTotalGames').textContent = games.length;
+    document.getElementById('metricActiveKeys').textContent = licenseKeys.filter(k => k.status === 'active').length;
+    document.getElementById('metricUsedKeys').textContent = licenseKeys.filter(k => k.status === 'used').length;
+    document.getElementById('metricRevokedKeys').textContent = licenseKeys.filter(k => k.status === 'revoked').length;
+  }
+
+  // ===== GAME FILTER =====
+  function filterGames(category) {
+    currentFilter = category;
+    document.querySelectorAll('.filter-pills .pill').forEach(pill => pill.classList.remove('active'));
+    event.target.classList.add('active');
+    renderGames();
+  }
+
+  // ===== RENDER GAMES =====
+  function renderGames() {
+    const container = document.getElementById('gamesList');
+    let filtered = games;
+    if (currentFilter !== 'all') {
+      filtered = games.filter(g => g.category === currentFilter);
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="empty-state">No games found. Add your first game!</div>';
+      return;
+    }
+
+    container.innerHTML = filtered.map(game => `
+      <div class="game-card">
+        <div class="game-info">
+          <div class="game-name">
+            ${game.name}${game.is_new ? '<span class="new-badge">NEW</span>' : ''}
+          </div>
+          <div class="game-meta">
+            ${game.category.toUpperCase()} | ${game.size} GB
+          </div>
+        </div>
+        <div class="game-actions">
+          <button class="btn btn-warning btn-sm" onclick="openGameModal(${game.id})">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteGame(${game.id})">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ===== GAME MODAL =====
+  function openGameModal(id = null) {
+    editingGameId = id;
+    document.getElementById('gameModalTitle').textContent = id ? '✏️ Edit Game' : '➕ Add Game';
+
+    if (id) {
+      const game = games.find(g => g.id === id);
+      if (game) {
+        document.getElementById('gameName').value = game.name;
+        document.getElementById('gameCategory').value = game.category;
+        document.getElementById('gameSize').value = game.size;
+        document.getElementById('gameDownloadUrl').value = game.download_url;
+        document.getElementById('gameImageUrl').value = game.image_url || '';
+        document.getElementById('gameIsNew').checked = game.is_new;
+      }
+    } else {
+      document.getElementById('gameName').value = '';
+      document.getElementById('gameCategory').value = 'pc';
+      document.getElementById('gameSize').value = '';
+      document.getElementById('gameDownloadUrl').value = '';
+      document.getElementById('gameImageUrl').value = '';
+      document.getElementById('gameIsNew').checked = false;
+    }
+
+    document.getElementById('gameModal').classList.add('show');
+  }
+
+  function closeGameModal() {
+    document.getElementById('gameModal').classList.remove('show');
+  }
+
+  async function saveGame() {
+    const name = document.getElementById('gameName').value.trim();
+    const category = document.getElementById('gameCategory').value;
+    const size = parseFloat(document.getElementById('gameSize').value);
+    const download_url = document.getElementById('gameDownloadUrl').value.trim();
+    const image_url = document.getElementById('gameImageUrl').value.trim();
+    const is_new = document.getElementById('gameIsNew').checked;
+
+    if (!name || !download_url || isNaN(size)) {
+      showAlert('Please fill all required fields!', 'error');
+      return;
+    }
+
+    const gameData = { name, category, size, download_url, image_url, is_new };
+
+    try {
+      let response;
+      if (editingGameId) {
+        response = await fetch(`${API}/editGame`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editingGameId, ...gameData })
+        });
+      } else {
+        response = await fetch(`${API}/addGame`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(gameData)
+        });
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        showAlert(editingGameId ? 'Game updated!' : 'Game added!', 'success');
+        closeGameModal();
+        await loadGames();
+      } else {
+        showAlert(result.message || 'Failed to save game', 'error');
+      }
+    } catch (error) {
+      console.error('Save game error:', error);
+      showAlert('Network error saving game', 'error');
+    }
+  }
+
+  async function deleteGame(id) {
+    if (!confirm('Delete this game?')) return;
+    try {
+      const response = await fetch(`${API}/deleteGame`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      const result = await response.json();
+      if (result.success) {
+        showAlert('Game deleted!', 'success');
+        await loadGames();
+      } else {
+        showAlert(result.message || 'Failed to delete game', 'error');
+      }
+    } catch (error) {
+      console.error('Delete game error:', error);
+      showAlert('Network error deleting game', 'error');
+    }
+  }
+
+  // ===== LICENSE KEYS =====
+  function renderKeys() {
+    const container = document.getElementById('keysList');
+    if (licenseKeys.length === 0) {
+      container.innerHTML = '<div class="empty-state">No license keys yet.</div>';
+      return;
+    }
+
+    container.innerHTML = licenseKeys.map(key => `
+      <div class="key-card">
+        <div class="key-value">${key.key}</div>
+        <div class="key-meta">
+          <span class="status-badge ${key.status}">${key.status}</span>
+          <span>${key.user_id ? '👤 ' + key.user_id.slice(0, 8) + '...' : 'Unbound'}</span>
+        </div>
+        <div class="key-meta">
+          <span>Created: ${new Date(key.created_at).toLocaleDateString()}</span>
+        </div>
+        <div class="key-actions">
+          <button class="btn btn-sm btn-success" onclick="setKeyStatus(${key.id}, 'active')">Activate</button>
+          <button class="btn btn-sm btn-warning" onclick="setKeyStatus(${key.id}, 'used')">Deactivate</button>
+          <button class="btn btn-sm btn-danger" onclick="setKeyStatus(${key.id}, 'revoked')">Revoke</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteKey(${key.id})" style="background:transparent;border:1px solid rgba(255,77,109,0.3);color:var(--neon-red);">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function addKey() {
+    const key = document.getElementById('newKeyInput').value.trim();
+    if (!key) {
+      showAlert('Please enter a license key', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API}/licenseKeys`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key })
+      });
+      const result = await response.json();
+      if (result.success) {
+        showAlert('License key added!', 'success');
+        document.getElementById('newKeyInput').value = '';
+        await loadKeys();
+      } else {
+        showAlert(result.message || 'Failed to add key (maybe duplicate)', 'error');
+      }
+    } catch (error) {
+      console.error('Add key error:', error);
+      showAlert('Network error adding key', 'error');
+    }
+  }
+
+  function generateRandomKey() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let key = 'LX-';
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        key += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      if (i < 3) key += '-';
+    }
+    document.getElementById('newKeyInput').value = key;
+  }
+
+  async function setKeyStatus(id, status) {
+    try {
+      const response = await fetch(`${API}/licenseKeys`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status })
+      });
+      const result = await response.json();
+      if (result.success) {
+        showAlert(`Key status set to ${status}`, 'success');
+        await loadKeys();
+      } else {
+        showAlert(result.message || 'Failed to update key status', 'error');
+      }
+    } catch (error) {
+      console.error('Update key error:', error);
+      showAlert('Network error updating key', 'error');
+    }
+  }
+
+  async function deleteKey(id) {
+    if (!confirm('Delete this license key?')) return;
+    try {
+      const response = await fetch(`${API}/licenseKeys`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      const result = await response.json();
+      if (result.success) {
+        showAlert('License key deleted!', 'success');
+        await loadKeys();
+      } else {
+        showAlert(result.message || 'Failed to delete key', 'error');
+      }
+    } catch (error) {
+      console.error('Delete key error:', error);
+      showAlert('Network error deleting key', 'error');
+    }
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    loadAll();
+  });
+
+  // Close modal on overlay click
+  document.getElementById('gameModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('gameModal')) {
+      closeGameModal();
+    }
+  });
+</script>
+</body>
+</html>
